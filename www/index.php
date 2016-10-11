@@ -119,11 +119,11 @@ Problems deciding? With Arg&Dec you can engage in debates with yourself or other
 </div>
   <br><br><br>
   
-  <div style="position:absolute; bottom:5px; right:5px; z-index=6">
+  <div style="position:absolute; bottom:5px; right:5px; z-index:6">
 <a href="#" onMouseOver="$('#footer').fadeIn(100);">About</a>
 </div>
 
-  <div id="footer" style="display: none; z-index=10;">
+  <div id="footer" style="display: none; z-index:10;">
     <hr class="divider">
     <footer style="padding-left:5px;">
   <p>Posted by: Dario Pellegrini</p>

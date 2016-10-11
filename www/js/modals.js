@@ -6,7 +6,7 @@ function modalInitNode(type){
 
 	var msg = "<h3> Info </h3>";
     msg += "<ul style='list-style-type: none;'>";
-//    msg += "<li class='id-modal' style='display: none;'>Id: &nbsp; <b>"+id+"</b><br></li>";
+//  msg += "<li class='id-modal' style='display: none;'>Id: &nbsp; <b>"+id+"</b><br></li>";
     
     msg += "<li class='type-modal' style='display: none;'>Type: &nbsp; <b>"+type+"</b><br></li>";
     msg += "<li class='name-modal'>Name: <input type='text' class='form-control' placeholder='Name'></input></li><br>";
@@ -53,7 +53,7 @@ function modalEditNode(node){
         button = 'btn-danger';
     }
 
-    $('#node-modal').find('.modal-title').html("Insert informations about the node " + id + " .");
+    $('#node-modal').find('.modal-title').html("Insert information about the node " + id + " .");
 
     var msg = "<h3> Edit </h3>";
     msg += "<ul style='list-style-type: none;'>";
@@ -104,7 +104,7 @@ function modalInitDebate(ownerid){
     color = '#5BC0DE';
     button = 'btn-info';
 
-    $('#debate-modal').find('.modal-title').html("Insert informations about the new debate.");
+    $('#debate-modal').find('.modal-title').html("Insert information about the new debate.");
 
     var msg = "<h3> Info </h3>";
     msg += "<ul style='list-style-type: none;'>";
@@ -133,7 +133,7 @@ function modalEditDebate(debate){
     color = '#5BC0DE';
     button = 'btn-info';
 
-    $('#debate-modal').find('.modal-title').html("Insert informations about the debate " + id + " .");
+    $('#debate-modal').find('.modal-title').html("Insert information about the debate " + id + " .");
 
     var msg = "<h3> Edit </h3>";
     msg += "<ul style='list-style-type: none;'>";
@@ -174,23 +174,23 @@ function modalAccess(debateId, debateName){
             cache: false,
             success: function(dat) {
                 var obj = JSON.parse(dat);
-              for (var i = 0; i < obj.length; i++){
+                for (var i = 0; i < obj.length; i++){
 
-                if (obj[i].accessright=='w'){
-                    msg += "<tr class='access-row' rel="+obj[i].id+"><td><b>"+obj[i].username+"</b></td><td><input type='checkbox' class='read-right' style='float: left;' checked onClick='addRight("+debateId+",this)'/></td><td><input type='checkbox' class='readwrite-right' style='float: left;' checked onClick='addRight("+debateId+",this)'/></td></tr>";
+                  if (obj[i].accessright=='w'){
+                      msg += "<tr class='access-row' rel="+obj[i].id+"><td><b>"+obj[i].username+"</b></td><td><input type='checkbox' class='read-right' style='float: left;' checked onClick='addRight("+debateId+",this)'/></td><td><input type='checkbox' class='readwrite-right' style='float: left;' checked onClick='addRight("+debateId+",this)'/></td></tr>";
+
+                  }
+                  else if (obj[i].accessright=='r'){
+                      msg += "<tr class='access-row' rel="+obj[i].id+"><td><b>"+obj[i].username+"</b></td><td><input type='checkbox' class='read-right' style='float: left;' checked onClick='addRight("+debateId+",this)'/></td><td><input type='checkbox' class='readwrite-right' style='float: left;' onClick='addRight("+debateId+",this)'/></td></tr>";
+
+                  }
+                  else{
+                      msg += "<tr class='access-row' rel="+obj[i].id+"><td><b>"+obj[i].username+"</b></td><td><input type='checkbox' class='read-right' style='float: left;' onClick='addRight("+debateId+",this)'/></td><td><input type='checkbox' class='readwrite-right' style='float: left;' onClick='addRight("+debateId+",this)'/></td></tr>";
+                  }
 
                 }
-                else if (obj[i].accessright=='r'){
-                    msg += "<tr class='access-row' rel="+obj[i].id+"><td><b>"+obj[i].username+"</b></td><td><input type='checkbox' class='read-right' style='float: left;' checked onClick='addRight("+debateId+",this)'/></td><td><input type='checkbox' class='readwrite-right' style='float: left;' onClick='addRight("+debateId+",this)'/></td></tr>";
 
-                }
-                else{
-                    msg += "<tr class='access-row' rel="+obj[i].id+"><td><b>"+obj[i].username+"</b></td><td><input type='checkbox' class='read-right' style='float: left;' onClick='addRight("+debateId+",this)'/></td><td><input type='checkbox' class='readwrite-right' style='float: left;' onClick='addRight("+debateId+",this)'/></td></tr>";
-                }
-
-              }
-
-              msg += "</table></div>";
+                msg += "</table></div>";
 
               $('#access-modal').find('.modal-body').html(msg);
               $('#access-modal').find('.btn:eq(1)').attr('onClick', '');
@@ -214,9 +214,7 @@ function getOption(element){
 
 function selectState(type){
 
-    
-
-
+   
     var msg = '<select class="form-control">';
 
     if(type=='issue'){

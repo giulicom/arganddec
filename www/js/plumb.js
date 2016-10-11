@@ -94,7 +94,7 @@ function addNode(){
 
   // Experimantal x and y values.
   x = 20;
-  y = 451;
+  y = 471;
 
   checkOverlap();
 
@@ -106,9 +106,16 @@ function addNode(){
             data: "did="+thisDebateId+"&n="+name+"&bv="+baseValue+"&cv="+computedValue+"&t="+type+"&tv="+typeValue+"&s="+state+"&a="+attachment+"&x="+x+"&y="+y,
             cache: false,
             success: function(dat) {
-              var id = dat;
-              var node = new Node(id,decodeURIComponent(name),decodeURIComponent(baseValue),decodeURIComponent(computedValue),decodeURIComponent(type),decodeURIComponent(typeValue),decodeURIComponent(state),decodeURIComponent(attachment),{},{},x,y);
+              //console.log(dat);
+              var obj = JSON.parse(dat);
+              var id = obj["nodeid"];
+              var createdBy = obj["createdby"];
+              var modifiedBy = '';
+              
+              var node = new Node(id,decodeURIComponent(name),decodeURIComponent(baseValue),decodeURIComponent(computedValue),decodeURIComponent(type),decodeURIComponent(typeValue),decodeURIComponent(state),decodeURIComponent(attachment),{},{},x,y,createdBy,modifiedBy);
               node.initializeNode();
+              
+              console.log(node);
               nodeList[id] = node;
 
               // Automatic show of the help popover for edges creation.
@@ -157,10 +164,12 @@ function loadNodes(){
                 var attachment = obj[i].attachment;
                 var x = obj[i].x;
                 var y = obj[i].y;
+                var createdby = obj[i].createdby;
+                var modifiedby = obj[i].modifiedby;
 
                 setNodeColor(type);
 
-                var node = new Node(id,decodeURIComponent(name),decodeURIComponent(baseValue),decodeURIComponent(computedValue),decodeURIComponent(type),decodeURIComponent(typeValue),decodeURIComponent(state),decodeURIComponent(attachment),{},{},x,y);
+                var node = new Node(id,decodeURIComponent(name),decodeURIComponent(baseValue),decodeURIComponent(computedValue),decodeURIComponent(type),decodeURIComponent(typeValue),decodeURIComponent(state),decodeURIComponent(attachment),{},{},x,y,createdby,modifiedby);
 
                 
                 node.initializeNode();
@@ -243,10 +252,14 @@ function editNode(node){
             data: "id="+node.id+"&n="+newName+"&bv="+newBaseValue+"&cv="+newComputedValue+"&tv="+newTypeValue+"&s="+newState+"&a="+newAttachment,
             cache: false,
             success: function(dat) {
+              var obj = JSON.parse(dat);
+              
+              //var nodeid = obj["nodeid"];
+              var modifiedBy = obj["modifiedby"];
               $("#"+id+" > #name").html(text);
               $("#"+id+" > #name").attr('title',newName);
-              node.editInfo(decodeURIComponent(newName), decodeURIComponent(newBaseValue), decodeURIComponent(newComputedValue), decodeURIComponent(newTypeValue), decodeURIComponent(newState), decodeURIComponent(newAttachment));
-
+              node.editInfo(decodeURIComponent(newName), decodeURIComponent(newBaseValue), decodeURIComponent(newComputedValue), decodeURIComponent(newTypeValue), decodeURIComponent(newState), decodeURIComponent(newAttachment),decodeURIComponent(modifiedBy));
+              
               // Modifying node image.
               $('#' + id).find('img').attr('src','gallery/'+nodeList[id].type+'-'+newState.toLowerCase()+'.png');
             }
@@ -406,7 +419,7 @@ function deleteEdge(id){
 The funciton check if the thisRight variable is equal to 'r'. This means that the user can only read the graph. So proceeds with the disabling of tools for graph editing.
 */
 function setRights(){
-  if(thisRight=='r'){
+  if(thisRight==='r'){
     $('.node-buttons > button').prop('disabled', true);
     $('.name-label').attr('onDblClick','');
     $('.edit-button').hide();

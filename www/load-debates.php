@@ -26,8 +26,9 @@ while($r = mysql_fetch_assoc($sqldata)) {
   $rows[] = $r;
 }
 
+$json_encoded_string = json_encode($rows);
 
+echo $json_encoded_string;
 
-echo json_encode($rows);
 
 mysql_close($connection);

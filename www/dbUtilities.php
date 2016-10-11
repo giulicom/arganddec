@@ -3,11 +3,12 @@
 /* Funzione di connessione al DB. */
 
 	function dbConnect(){
-		$connection = mysql_connect("host", "username", "password")
+		$connection = mysql_connect("arganddepxadmin.mysql.db", "arganddepxadmin", "ArgdecDB1520")
 			or die("Errore nella connessione al server del DB: " . mysql_error());
-		mysql_select_db("databasename") or die("Errore nell'accesso al DB: " . mysql_error());
+		mysql_select_db("arganddepxadmin") or die("Errore nell'accesso al DB: " . mysql_error());
 		return $connection;
-		}
+	}
+	
 		
 //--------------------------------------------------------------------------------------------------------------------------		
 	
@@ -459,6 +460,7 @@ function changeChar($dato){
 	$dato = str_replace("ú", "&uacute;", $dato);
 	$dato = str_replace("ñ", "&ntilde;", $dato);
 	$dato = str_replace("ç", "&ccedil;", $dato);
+        $dato = str_replace("%", "&#37;",   $dato);
 	$dato = str_replace("'", "&#039;",   $dato);
 	$dato = str_replace('"', "&quot;",   $dato);
 	$dato = str_replace('°', "&deg;",    $dato);
@@ -473,6 +475,10 @@ function changeChar($dato){
 	return $dato;
 }
 
-
+function escape_percentage_for_json($str) {
+    $str = str_replace("%", "%25", $str);
+    
+    return $str;
+}
 
 ?>

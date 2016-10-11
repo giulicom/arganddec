@@ -15,6 +15,7 @@ if (!isset($_SESSION['id'])) {
 }
 
 $userid = $_SESSION['id'];
+$username = $_SESSION['username'];
 
 
 $id = $_POST['id'];
@@ -25,15 +26,27 @@ $typevalue = $_POST['tv'];
 $state = $_POST['s'];
 $attachment = $_POST['a'];
 
-$sqldebateid=mysql_query("SELECT debateid FROM nodes WHERE id=$id") or die(mysql_error());
+$sqldebateid=mysql_query("SELECT debateid, modifiedby FROM nodes WHERE id=$id") or die(mysql_error());
 
 while($r=mysql_fetch_array($sqldebateid)){
 	$debateid=$r['debateid'];
+        $modifiedby=$r['modifiedby'];
 }
 
-$sql = mysql_query("UPDATE nodes SET name='$name', basevalue='$basevalue', computedvalue='$computedvalue', typevalue='$typevalue', state='$state', attachment='$attachment' WHERE id=$id") or die(mysql_error());
+$pos = strpos($modifiedby, $username.' ');
+$modifiedby_str = '';
+// don't repeat the name of the user if it has already modified the node at least once
+if($pos === false) {
+    
+    $modifiedby_str = $username." ".$modifiedby;
+    
+} else  $modifiedby_str = $modifiedby;
 
-echo mysql_insert_id();
+$sql = mysql_query("UPDATE nodes SET name='$name', basevalue='$basevalue', computedvalue='$computedvalue', typevalue='$typevalue', state='$state', attachment='$attachment', modifiedby='$modifiedby_str' WHERE id=$id") or die(mysql_error());
+
+$nodeid = mysql_insert_id();
+
+echo json_encode(array("nodeid"=>$nodeid,"modifiedby"=>$modifiedby_str));
 
 $app_id = '104765';
 $app_key = '4a093e77bfac049910cf';
@@ -51,7 +64,13 @@ $data['computedvalue']=$computedvalue;
 $data['typevalue']=$typevalue;
 $data['state']=$state;
 $data['attachment']=$attachment;
+$data['createdby']=$username;
+$data['modifiedby']=$modifiedby_str;
 
 $pusher->trigger('test_channel', 'my_event', $data);
+
+
+// update the date of the last modified (by) of the current debate
+$sql1 = mysql_query("UPDATE debates SET lastmodified=CURRENT_TIMESTAMP, lastmodifiedby='$username'  WHERE id='$debateid'");
 
 mysql_close($connection);

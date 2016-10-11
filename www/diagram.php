@@ -290,7 +290,21 @@ while($r3=mysql_fetch_array($sqldata3)){
   </div>
 <div class="jumbotron">
   <div class="container"  style="margin-left: 20px;">
-  <h1><?php echo $name; ?></h1>
+  <h1><?php echo $name.'</br>';?>
+  </h1>
+      <h5> 
+          <?php 
+                $sql = mysql_query("SELECT lastmodified, lastmodifiedby FROM debates WHERE id='$debateid'");
+                while($r = mysql_fetch_array($sql)) {
+                    $lastModified = $r['lastmodified'];
+                    $lastModifiedBy = $r['lastmodifiedby'];
+                }
+                if($lastModified!='' && $lastModifiedBy!='') {
+                    echo 'Last modify on '.$lastModified.' by '.$lastModifiedBy; 
+                }
+                
+        ?>
+      </h5>
 </div>
 </div>
 </nav>
@@ -360,9 +374,47 @@ while($r3=mysql_fetch_array($sqldata3)){
     <button class="btn btn-default" onClick="computeAllValues(true)">Compute values</button>
     <button class="btn btn-default" onClick="graphMapping()">Map the graph</button>
     <button class="btn btn-default" onClick="buildNaturalText()">Convert to natural text</button>
+    
+    <!--<button class='btn btn-default'
+        <a href="javascript:void(0)" class="pull-right" tabindex="-1" role="button" 
+            data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Participants">
+            <img src="gallery/participants.png" style="width:20px;" />
+        </a>
+    </button>-->
+    
 
     <?php
+    // PARTICIPANTS //
+    $sql1 = mysql_query("SELECT users.username, rights.accessright FROM rights INNER JOIN "
+        . "users ON rights.userid=users.id WHERE rights.debateid='$debateid'") or die(mysql_error());
+    
+    $title = '<b>Participants</b>';
+    $str='';
+    while($row = mysql_fetch_array($sql1)) {
+        if($row["accessright"]=='o') {
+            $accessright = 'owner';
+        }
+        else if($row["accessright"]=='r') {
+            $accessright = 'read only';
+        }
+        else if($row["accessright"]=='w') {
+            $accessright = 'read and modify';
+        }
+        
+        $str.=$row['username'].' - '.$accessright.' </br> '; 
+    }
 
+    echo "<button class='btn btn-default'
+            <a href=\"javascript:void(0)\" class=\"pull-right\" tabindex=\"-1\" role=\"button\" 
+                data-toggle=\"popover\" data-placement=\"left\" data-trigger=\"hover\"  data-html=true title='$title'
+                data-content='$str'>
+                <img src=\"gallery/participants.png\" style=\"width:20px;\" />
+            </a>
+        </button>";
+
+
+    
+    // MAPPING //
     // Only the user who create the mapping can see the mapping.
       $sql2 = mysql_query("SELECT * FROM mapping WHERE userid='$userid' AND debateid='$debateid'") or die(mysql_error());
 
@@ -409,7 +461,7 @@ while($r3=mysql_fetch_array($sqldata3)){
     <span class="glyphicon glyphicon-cog"></span>
   </div>
   <ul class="dropdown-menu" role="menu">
-    <li><a id="info-button" href="javascript:void(0)" onClick="">Informations</a></li>
+    <li><a id="info-button" href="javascript:void(0)" onClick="">Information</a></li>
     <li><a id="edit-button" class="edit-button" href="javascript:void(0)" onClick="">Edit</a></li>
 
     <li class="dropdown-submenu">
@@ -447,7 +499,7 @@ while($r3=mysql_fetch_array($sqldata3)){
     <span class="glyphicon glyphicon-cog"></span>
   </div>
   <ul class="dropdown-menu" role="menu">
-    <li><a id="info-button" href="javascript:void(0)" onClick="">Informations</a></li>
+    <li><a id="info-button" href="javascript:void(0)" onClick="">Information</a></li>
 
 
     <li><a id="edit-button" class="edit-button" href="javascript:void(0)" onClick="">Edit</a></li>
@@ -487,7 +539,7 @@ while($r3=mysql_fetch_array($sqldata3)){
     <span class="glyphicon glyphicon-cog"></span>
   </div>
   <ul class="dropdown-menu" role="menu">
-    <li><a id="info-button" href="javascript:void(0)" onClick="">Informations</a></li>
+    <li><a id="info-button" href="javascript:void(0)" onClick="">Information</a></li>
     <li><a id="edit-button" class="edit-button" href="javascript:void(0)" onClick="">Edit</a></li>
 
     <li class="dropdown-submenu">
@@ -523,7 +575,7 @@ while($r3=mysql_fetch_array($sqldata3)){
     <span class="glyphicon glyphicon-cog"></span>
   </div>
   <ul class="dropdown-menu" role="menu">
-    <li><a id="info-button" href="javascript:void(0)" onClick="">Informations</a></li>
+    <li><a id="info-button" href="javascript:void(0)" onClick="">Information</a></li>
     <li><a id="edit-button" class="edit-button" href="javascript:void(0)" onClick="">Edit</a></li>
 
     <li class="dropdown-submenu">
@@ -569,7 +621,7 @@ while($r3=mysql_fetch_array($sqldata3)){
     <span class="glyphicon glyphicon-cog"></span>
   </button>
   <ul class="dropdown-menu" role="menu">
-    <li><a id="info-button" href="javascript:void(0)" onClick="">Informations</a></li>
+    <li><a id="info-button" href="javascript:void(0)" onClick="">Information</a></li>
     <li><a id="edit-button" class="edit-button" href="javascript:void(0)" onClick="">Edit</a></li>
     <li class="divider"></li>
     <li><a href="javascript:void(0)" onClick="deleteNode(this)">Delete node</a></li>
